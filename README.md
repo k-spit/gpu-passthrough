@@ -666,6 +666,22 @@ in order to use hugepages, add
 
 in your virsh edit.
 
+# Improving performance on AMD CPUs
+
+Previously, Nested Page Tables (NPT) had to be disabled on AMD systems running KVM to improve GPU performance because of a very old bug, but the trade off was decreased CPU performance, including stuttering.
+
+There is a kernel patch that resolves this issue, which was accepted into kernel 4.14-stable and 4.9-stable. If you are running the official linux or linux-lts kernel the patch has already been applied (make sure you are on the latest). If you are running another kernel you might need to manually patch yourself.
+Note: Several Ryzen users (see this Reddit thread) have tested the patch, and can confirm that it works, bringing GPU passthrough performance up to near native quality.
+
+Starting with QEMU 3.1 the TOPOEXT cpuid flag is disabled by default. In order to use hyperthreading(SMT) on AMD CPU's you need to manually enable it:
+
+```xml
+ <cpu mode='host-passthrough' check='none'>
+ <topology sockets='1' cores='4' threads='2'/>
+ <feature policy='require' name='topoext'/>
+ </cpu>
+```
+
 # How to add a physical device or physical partition as virtual hard disk under virt-manager
 
 ```shell
