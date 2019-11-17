@@ -563,11 +563,22 @@ If this still throws a permission error, set the following in the same file:
 clear_emulator_capabilities = 0
 ```
 
-If this still throws a permission error, execute the ollowing command: 
+If this still throws a permission error, execute the ollowing command:  
 
 ```shell
 chown root:kvm /dev/kvm
 ```
+
+If this still throws a permission error, execute the ollowing command:  
+
+Add the folowing to `/etc/apparmor.d/abstractions/libvirt-qemu`
+
+```shell
+/dev/input/* rw,
+```
+
+Then restart apparmor:  
+`sudo service apparmor restart`  
 
 Any permission issues should now be solved.
 
