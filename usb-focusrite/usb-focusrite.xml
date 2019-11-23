@@ -1,0 +1,7 @@
+<hostdev mode='subsystem' type='usb' managed='yes'>
+  <source>
+    <vendor id='0x1235'/>
+    <product id='0x8211'/>
+  </source>
+  <address type='usb' bus='0' port='4'/>
+</hostdev>

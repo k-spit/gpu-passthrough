@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=/home/desktop/gpu-passthrough/usb-focusrite/unplug.jpg
+Exec=sh /home/desktop/gpu-passthrough/usb-focusrite/detach.sh
+Name=Detach Focusrite Win10
