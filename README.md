@@ -29,33 +29,11 @@ XML config and startup settings for GPU-passthrough of a second nVidia card in 2
   - the GPU you want to pass through should be in the *second* PCI-e slot
 
 # How I did it:
-[install/make](https://github.com/qemu/qemu) newest stable qemu version 
-
-Lets get system up to date and install git, build tools for QEMU source building:  
-```shell
-sudo apt update && sudo apt upgrade -y; time sudo apt-get install build-essential zlib1g-dev pkg-config libglib2.0-dev binutils-dev libboost-all-dev autoconf libtool libssl-dev libpixman-1-dev libpython-dev python-pip python-capstone virtualenv ssvnc -y
-```
-
-GIT dependencies  
-```shell
-sudo apt update && sudo apt upgrade -y; sudo apt install make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext unzip -y
-```
-
-Do the installation process (can take some time (1hour), get a coffee, or some )
-```shell
-git clone https://git.qemu.org/git/qemu.git
-cd qemu
-git submodule init
-git submodule update --recursive
-./configure
-make
-sudo make install 
-```
 
 install the required packages:
 
 `````shell
-sudo apt-get install libvirt0 bridge-utils virt-manager ovmf
+sudo apt-get install libvirt0 bridge-utils virt-manager qemu-kvm ovmf
 `````
 
 make changes to _/etc/default/grub_:
