@@ -167,6 +167,15 @@
       <alias name='hostdev1'/>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
     </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source>
+        <vendor id='0x1235'/>
+        <product id='0x8211'/>
+        <address bus='3' device='2'/>
+      </source>
+      <alias name='hostdev2'/>
+      <address type='usb' bus='0' port='4'/>
+    </hostdev>
     <memballoon model='virtio'>
       <alias name='balloon0'/>
       <address type='pci' domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>

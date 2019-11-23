@@ -4,8 +4,8 @@ vendorid="0x1235"
 domain="win10"
 devicedesc=/home/desktop/gpu-passthrough/usb-focusrite/usb-focusrite.xml
 
-virsh dumpxml $domain > tmp
-if grep -q $vendorid tmp; then
+virsh dumpxml $domain > "$domain".xml
+if grep -q $vendorid "$domain".xml; then
   echo -e "vendorid: $vendorid found"
   virsh detach-device $domain --file $devicedesc
   exit
