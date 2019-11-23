@@ -9,6 +9,7 @@ XML config and startup settings for GPU-passthrough of a second nVidia card in 2
   - Operating System: Ubuntu 18.04.3 LTS
   - Kernel Version: 5.0.0-32-generic
   - OS Type: 64-bit
+  - Mainboard: Asus ROG STRIX X470-F GAMING
   - Processors: 6 x AMD Ryzen 2600x Six-Core Processor
   - Memory: 32 GiB of RAM
 
