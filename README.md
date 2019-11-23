@@ -6,8 +6,8 @@ This tutorial is based on this [github repository](https://github.com/xiyizi/kvm
 # kvm-config
 XML config and startup settings for GPU-passthrough of a second nVidia card in 2 slot of mainboard
 
-  - Operating System: Ubuntu 18.04.3 LTS
-  - Kernel Version: 5.0.0-32-generic
+  - Operating System: Ubuntu 19.10
+  - Kernel Version: 5.3.0-23-generic
   - OS Type: 64-bit
   - Mainboard: Asus ROG STRIX X470-F GAMING
   - Processors: 6 x AMD Ryzen 2600x Six-Core Processor
@@ -18,8 +18,8 @@ XML config and startup settings for GPU-passthrough of a second nVidia card in 2
 
   - Guest operating system: Windows 10 64bit 1903
 
-  - Virtual Machine Manager version 1.5.1
-  - qemu emulator version 4.1.90 (v4.2.0-rc0-2-g1cee80fa66-dirty)
+  - Virtual Machine Manager version 2.2.1
+  - qemu emulator version 4.0.0 (Debian 1:4.0+dfsg-0ubuntu9.1)
 
 # Key points: 
   - latest WORKING BIOS version is 4207!
