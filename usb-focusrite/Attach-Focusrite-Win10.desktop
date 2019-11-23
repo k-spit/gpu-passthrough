@@ -1,7 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Terminal=false
-Icon=/home/desktop/gpu-passthrough/usb-focusrite/plug.jpg
-Exec=sh /home/desktop/gpu-passthrough/usb-focusrite/attach.sh
-Name=Attach Focusrite Win10
