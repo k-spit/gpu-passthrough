@@ -8,6 +8,7 @@ virsh dumpxml $domain > "$domain".xml
 if grep -q $vendorid "$domain".xml; then
   echo -e "vendorid: $vendorid found"
   virsh detach-device $domain --file $devicedesc
+  killall pulseaudio
   exit
 else
   echo -e "no vendorid found"
