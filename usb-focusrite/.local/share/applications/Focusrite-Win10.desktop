@@ -1,7 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Terminal=false
-Icon=/home/desktop/gpu-passthrough/usb-focusrite/scarlett.jpg
-Exec=sh /home/desktop/gpu-passthrough/usb-focusrite/attach-detach.sh
-Name=Focusrite Win10

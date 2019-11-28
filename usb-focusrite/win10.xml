@@ -1,4 +1,4 @@
-<domain type='kvm' id='2' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+<domain type='kvm' id='4' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>win10</name>
   <uuid>3a6896ed-cf24-4395-9abf-2dd22046c4b9</uuid>
   <metadata>

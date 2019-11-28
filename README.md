@@ -22,7 +22,7 @@ XML config and startup settings for GPU-passthrough of a second nVidia card in 2
   - qemu emulator version 4.0.0 (Debian 1:4.0+dfsg-0ubuntu9.1)
 
 # Key points: 
-  - latest WORKING BIOS version is 4207!
+  - latest WORKING BIOS version is 5406 beta
   - svm must be enabled in BIOS
   - iommu group manipulation must be enabled in BIOS
   - GPU must be isolated and passed through to VFIO via script during boot process, *before* nvidia driver loads

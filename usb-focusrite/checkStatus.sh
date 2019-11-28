@@ -4,14 +4,17 @@ vendorid="0x1235"
 domain="win10"
 devicedesc=/home/desktop/gpu-passthrough/usb-focusrite/usb-focusrite.xml
 
+status=$(virsh domstate $domain)
+if [ "$status" = "shut off" ];then
+  echo -e "shut off"
+  exit 2
+fi
+
 virsh dumpxml $domain > "$domain".xml
 if grep -q $vendorid "$domain".xml; then
   echo -e "vendorid: $vendorid found"
-  virsh detach-device $domain --file $devicedesc
-  killall pulseaudio
-  exit
+  exit 1
 else
   echo -e "no vendorid found"
-  virsh attach-device $domain --file $devicedesc
-  exit
+  exit 2
 fi
