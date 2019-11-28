@@ -25,6 +25,22 @@ self.update = Thread(target=self.show_seconds)
 self.update.setDaemon(True)
 ```
 
+Define thread-update function, check virsh domain status and if necessary change icon.  
+```python
+def update(self):
+  t = 2
+  while True:
+      x = os.system(CURRPATH+"/checkStatus.sh")
+      if x == 256:
+          print("attached")
+          self.indicator.set_icon(CURRPATH+"/attached.svg")
+      else:
+          print("not attached")
+          self.indicator.set_icon(CURRPATH+"/detached.svg")
+      time.sleep(1)
+      t += 1
+```
+
 Define functions for attaching/detaching the interface.  Each of these function is used to execute a underlying shell script with the help of `os.system`.
 
 ```shell
