@@ -578,6 +578,19 @@ cgroup_device_acl = [
 ]
 ```
 
+### USB-Headset disconnects randomly
+
+run `lsusb` and copy USBID from your usb-headset and add following to `/etc/X11/xorg.conf`
+```shell
+Section "InputClass"
+Identifier "Speedlink Medusa"
+MatchUSBID "0d8c:0006"
+Option "Ignore" "on"
+EndSection
+```
+
+After a restart error should be gone.
+
 The whole xml file from `sudo virsh edit win10`  
 ```xml
 <domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
