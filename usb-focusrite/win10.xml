@@ -1,11 +1,6 @@
 <domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>win10</name>
-  <uuid>3a6896ed-cf24-4395-9abf-2dd22046c4b9</uuid>
-  <metadata>
-    <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
-      <libosinfo:os id="http://microsoft.com/win/10"/>
-    </libosinfo:libosinfo>
-  </metadata>
+  <uuid>c626c5d3-1b42-4fed-8f6d-337a62351252</uuid>
   <memory unit='KiB'>16777216</memory>
   <currentMemory unit='KiB'>16777216</currentMemory>
   <memoryBacking>
@@ -28,10 +23,10 @@
     <partition>/machine</partition>
   </resource>
   <os>
-    <type arch='x86_64' machine='pc-q35-4.0'>hvm</type>
+    <type arch='x86_64' machine='pc-q35-2.11'>hvm</type>
     <loader readonly='yes' type='pflash'>/usr/share/OVMF/OVMF_CODE.fd</loader>
     <nvram>/var/lib/libvirt/qemu/nvram/win10_VARS.fd</nvram>
-    <boot dev='hd'/>
+    <bootmenu enable='yes'/>
   </os>
   <features>
     <acpi/>
@@ -51,7 +46,6 @@
   <cpu mode='host-passthrough' check='none'>
     <topology sockets='1' cores='3' threads='2'/>
     <cache level='3' mode='emulate'/>
-    <feature policy='require' name='topoext'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -67,12 +61,13 @@
     <suspend-to-disk enabled='no'/>
   </pm>
   <devices>
-    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <emulator>/usr/bin/kvm-spice</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='raw'/>
       <source file='/var/libvirt/images/win10.img'/>
       <backingStore/>
       <target dev='sda' bus='sata'/>
+      <boot order='2'/>
       <alias name='sata0-0-0'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
     </disk>
@@ -80,13 +75,28 @@
       <driver name='qemu' type='raw' cache='none' io='native'/>
       <source dev='/dev/disk/by-id/ata-OCZ-TRION100_95UB60EOKMGX'/>
       <backingStore/>
-      <target dev='sde' bus='sata'/>
-      <alias name='sata0-0-4'/>
-      <address type='drive' controller='0' bus='0' target='0' unit='4'/>
+      <target dev='sdc' bus='sata'/>
+      <alias name='sata0-0-2'/>
+      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
     </disk>
-    <controller type='usb' index='0' model='qemu-xhci' ports='15'>
+    <controller type='usb' index='0' model='ich9-ehci1'>
       <alias name='usb'/>
-      <address type='pci' domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1d' function='0x7'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci1'>
+      <alias name='usb'/>
+      <master startport='0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1d' function='0x0' multifunction='on'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci2'>
+      <alias name='usb'/>
+      <master startport='2'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1d' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci3'>
+      <alias name='usb'/>
+      <master startport='4'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1d' function='0x2'/>
     </controller>
     <controller type='sata' index='0'>
       <alias name='ide'/>
@@ -95,55 +105,58 @@
     <controller type='pci' index='0' model='pcie-root'>
       <alias name='pcie.0'/>
     </controller>
-    <controller type='pci' index='1' model='pcie-root-port'>
-      <model name='pcie-root-port'/>
-      <target chassis='1' port='0x10'/>
+    <controller type='pci' index='1' model='dmi-to-pci-bridge'>
+      <model name='i82801b11-bridge'/>
       <alias name='pci.1'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0' multifunction='on'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x1e' function='0x0'/>
     </controller>
-    <controller type='pci' index='2' model='pcie-root-port'>
-      <model name='pcie-root-port'/>
-      <target chassis='2' port='0x11'/>
+    <controller type='pci' index='2' model='pci-bridge'>
+      <model name='pci-bridge'/>
+      <target chassisNr='2'/>
       <alias name='pci.2'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x1'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </controller>
     <controller type='pci' index='3' model='pcie-root-port'>
       <model name='pcie-root-port'/>
-      <target chassis='3' port='0x12'/>
+      <target chassis='3' port='0x10'/>
       <alias name='pci.3'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x2'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0' multifunction='on'/>
     </controller>
     <controller type='pci' index='4' model='pcie-root-port'>
       <model name='pcie-root-port'/>
-      <target chassis='4' port='0x13'/>
+      <target chassis='4' port='0x11'/>
       <alias name='pci.4'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x3'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x1'/>
     </controller>
     <controller type='pci' index='5' model='pcie-root-port'>
       <model name='pcie-root-port'/>
-      <target chassis='5' port='0x14'/>
+      <target chassis='5' port='0x12'/>
       <alias name='pci.5'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x4'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x2'/>
     </controller>
     <controller type='pci' index='6' model='pcie-root-port'>
       <model name='pcie-root-port'/>
-      <target chassis='6' port='0x15'/>
+      <target chassis='6' port='0x13'/>
       <alias name='pci.6'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x5'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x3'/>
     </controller>
     <controller type='pci' index='7' model='pcie-root-port'>
       <model name='pcie-root-port'/>
-      <target chassis='7' port='0x16'/>
+      <target chassis='7' port='0x14'/>
       <alias name='pci.7'/>
-      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x6'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x4'/>
+    </controller>
+    <controller type='virtio-serial' index='0'>
+      <alias name='virtio-serial0'/>
+      <address type='pci' domain='0x0000' bus='0x03' slot='0x00' function='0x0'/>
     </controller>
     <interface type='network'>
-      <mac address='52:54:00:1d:94:ac'/>
+      <mac address='52:54:00:40:9a:10'/>
       <source network='default' bridge='virbr0'/>
       <target dev='vnet0'/>
-      <model type='e1000e'/>
+      <model type='rtl8139'/>
       <alias name='net0'/>
-      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x02' slot='0x01' function='0x0'/>
     </interface>
     <input type='mouse' bus='ps2'>
       <alias name='input0'/>
@@ -167,14 +180,31 @@
       <alias name='hostdev1'/>
       <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
     </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source>
+        <vendor id='0x0d8c'/>
+        <product id='0x0006'/>
+        <address bus='1' device='3'/>
+      </source>
+      <alias name='hostdev2'/>
+      <address type='usb' bus='0' port='1'/>
+    </hostdev>
+    <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir0'/>
+      <address type='usb' bus='0' port='2'/>
+    </redirdev>
+    <redirdev bus='usb' type='spicevmc'>
+      <alias name='redir1'/>
+      <address type='usb' bus='0' port='3'/>
+    </redirdev>
     <memballoon model='virtio'>
       <alias name='balloon0'/>
       <address type='pci' domain='0x0000' bus='0x06' slot='0x00' function='0x0'/>
     </memballoon>
   </devices>
   <seclabel type='dynamic' model='apparmor' relabel='yes'>
-    <label>libvirt-3a6896ed-cf24-4395-9abf-2dd22046c4b9</label>
-    <imagelabel>libvirt-3a6896ed-cf24-4395-9abf-2dd22046c4b9</imagelabel>
+    <label>libvirt-c626c5d3-1b42-4fed-8f6d-337a62351252</label>
+    <imagelabel>libvirt-c626c5d3-1b42-4fed-8f6d-337a62351252</imagelabel>
   </seclabel>
   <seclabel type='dynamic' model='dac' relabel='yes'>
     <label>+0:+0</label>
@@ -182,7 +212,7 @@
   </seclabel>
   <qemu:commandline>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-MOSART_Semi._2.4G_Keyboard_Mouse-if01-event-mouse'/>
+    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse'/>
     <qemu:arg value='-object'/>
     <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd,grab_all=on,repeat=on'/>
   </qemu:commandline>

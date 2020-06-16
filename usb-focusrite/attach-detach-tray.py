@@ -35,17 +35,25 @@ class Indicator():
     def build_menu(self):
         menu = gtk.Menu()
 
-        item_color = gtk.MenuItem('Attach Focusrite')
-        item_color.connect('activate', self.attach)
+        item_color = gtk.MenuItem('focusrite win10')
+        item_color.connect('activate', self.focusritewin10)
 
-        item_color2 = gtk.MenuItem('Detach Focusrite')
-        item_color2.connect('activate', self.detach)
+        item_color2 = gtk.MenuItem('focusrite ubuntu')
+        item_color2.connect('activate', self.focusriteubuntu)
+
+        item_color3 = gtk.MenuItem('speedlink medusa win10')
+        item_color3.connect('activate', self.speedlinkmedusawin10)
+
+        item_color4 = gtk.MenuItem('speedlink medusa ubuntu')
+        item_color4.connect('activate', self.speedlinkmedusaubuntu)
 
         item_quit = gtk.MenuItem('Quit')
         item_quit.connect('activate', self.quit)
 
         menu.append(item_color)
         menu.append(item_color2)
+        menu.append(item_color3)
+        menu.append(item_color4)
         menu.append(item_quit)
         menu.show_all()
         return menu
@@ -61,22 +69,21 @@ class Indicator():
                 self.indicator.set_icon(CURRPATH+"/attached.svg")
                 print("not attached")
             time.sleep(1)
-            #mention = str(t)+" Monkeys"
-            # apply the interface update using  GObject.idle_add()
-            #GObject.idle_add(
-            #    self.indicator.set_label,
-            #    mention, self.app,
-            #    priority=GObject.PRIORITY_DEFAULT
-            #    )
             t += 1
 
-    def attach(self, source):
-        os.system(CURRPATH+"/attach.sh")
+    def focusritewin10(self, source):
+        os.system(CURRPATH+"/focusrite-win10.sh")
         self.indicator.set_icon(CURRPATH+"/detached.svg")
 
-    def detach(self, source):
-        os.system(CURRPATH+"/detach.sh")
+    def focusriteubuntu(self, source):
+        os.system(CURRPATH+"/focusrite-ubuntu.sh")
         self.indicator.set_icon(CURRPATH+"/attached.svg")
+
+    def speedlinkmedusawin10(self, source):
+        os.system(CURRPATH+"/speedlink-medusa-win10.sh")
+
+    def speedlinkmedusaubuntu(self, source):
+        os.system(CURRPATH+"/speedlink-medusa-ubuntu.sh")
 
     def quit(self, source):
         gtk.main_quit()
