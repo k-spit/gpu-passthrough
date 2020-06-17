@@ -839,3 +839,5 @@ https://mathiashueber.com/configuring-hugepages-use-virtual-machine/
 https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
 
 https://bbs.archlinux.org/viewtopic.php?id=69454
+
+https://python-evdev.readthedocs.io/en/latest/tutorial.html
