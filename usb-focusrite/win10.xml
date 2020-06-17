@@ -1,4 +1,4 @@
-<domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+<domain type='kvm' id='3' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>win10</name>
   <uuid>c626c5d3-1b42-4fed-8f6d-337a62351252</uuid>
   <memory unit='KiB'>16777216</memory>
@@ -182,12 +182,12 @@
     </hostdev>
     <hostdev mode='subsystem' type='usb' managed='yes'>
       <source>
-        <vendor id='0x0d8c'/>
-        <product id='0x0006'/>
-        <address bus='1' device='3'/>
+        <vendor id='0x1235'/>
+        <product id='0x8211'/>
+        <address bus='3' device='2'/>
       </source>
       <alias name='hostdev2'/>
-      <address type='usb' bus='0' port='1'/>
+      <address type='usb' bus='0' port='5'/>
     </hostdev>
     <redirdev bus='usb' type='spicevmc'>
       <alias name='redir0'/>

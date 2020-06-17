@@ -35,21 +35,29 @@ class Indicator():
     def build_menu(self):
         menu = gtk.Menu()
 
-        item_color = gtk.MenuItem('focusrite win10')
+        item_color5 = gtk.MenuItem('Start win10 domain')
+        item_color5.connect('activate', self.startwin10)
+
+        item_color6 = gtk.MenuItem('Stop win10 (force)')
+        item_color6.connect('activate', self.forcestopwin10)
+
+        item_color = gtk.MenuItem('Focusrite win10')
         item_color.connect('activate', self.focusritewin10)
 
-        item_color2 = gtk.MenuItem('focusrite ubuntu')
+        item_color2 = gtk.MenuItem('Focusrite ubuntu')
         item_color2.connect('activate', self.focusriteubuntu)
 
-        item_color3 = gtk.MenuItem('speedlink medusa win10')
+        item_color3 = gtk.MenuItem('Speedlink medusa win10')
         item_color3.connect('activate', self.speedlinkmedusawin10)
 
-        item_color4 = gtk.MenuItem('speedlink medusa ubuntu')
+        item_color4 = gtk.MenuItem('Speedlink medusa ubuntu')
         item_color4.connect('activate', self.speedlinkmedusaubuntu)
 
-        item_quit = gtk.MenuItem('Quit')
+        item_quit = gtk.MenuItem('quit')
         item_quit.connect('activate', self.quit)
 
+        menu.append(item_color5)
+        menu.append(item_color6)
         menu.append(item_color)
         menu.append(item_color2)
         menu.append(item_color3)
@@ -84,6 +92,12 @@ class Indicator():
 
     def speedlinkmedusaubuntu(self, source):
         os.system(CURRPATH+"/speedlink-medusa-ubuntu.sh")
+
+    def startwin10(self, source):
+        os.system(CURRPATH+"/start-win10.sh")
+
+    def forcestopwin10(self, source):
+        os.system(CURRPATH+"/forcestop-win10.sh")
 
     def quit(self, source):
         gtk.main_quit()
