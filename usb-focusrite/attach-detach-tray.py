@@ -95,7 +95,6 @@ class Indicator():
 
     def startwin10(self, source):
         os.system(CURRPATH+"/start-win10.sh")
-        os.system("sudo " + CURRPATH+"/evemu-focus.sh")
 
     def forcestopwin10(self, source):
         os.system(CURRPATH+"/forcestop-win10.sh")
