@@ -3,6 +3,7 @@ import gi
 import os
 import signal
 import time
+import subprocess
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('AppIndicator3', '0.1')
@@ -95,7 +96,11 @@ class Indicator():
 
     def startwin10(self, source):
         os.system(CURRPATH+"/start-win10.sh")
-        os.system("sudo " + CURRPATH+"/evemu-focus.sh")
+        password=open(CURRPATH+"/password.txt").readline().rstrip()
+        print(os.getcwd())
+        print(password)
+        subprocess.call('echo {} | sudo -S ' + CURRPATH+'/evemu-focus.sh --args'.format(password), shell=True)
+        #subprocess.call('echo {} | sudo -S /home/desktop/git/gpu-passthrough/usb-focusrite/evemu-focus.sh --args'.format(password), shell=True)
 
     def forcestopwin10(self, source):
         os.system(CURRPATH+"/forcestop-win10.sh")
