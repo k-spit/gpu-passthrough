@@ -21,9 +21,10 @@ CURRPATH = os.path.dirname(os.path.realpath(__file__))
 class Indicator():
     def __init__(self):
         self.app = 'focusrite'
-        self.indicator = appindicator.Indicator.new(APPINDICATOR_ID, CURRPATH+"/attached.svg", appindicator.IndicatorCategory.SYSTEM_SERVICES)
+        self.indicator = appindicator.Indicator.new(APPINDICATOR_ID, CURRPATH+"/windows-logo.svg", appindicator.IndicatorCategory.SYSTEM_SERVICES)
         self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
         self.indicator.set_menu(self.build_menu())
+        print(self.indicator.get_status())
         notify.init(APPINDICATOR_ID)
 
         # thread code
@@ -71,21 +72,21 @@ class Indicator():
         while True:
             x = os.system(CURRPATH+"/checkStatus.sh")
             if x == 256:
-                self.indicator.set_icon(CURRPATH+"/detached.svg")
+                self.indicator.set_icon(CURRPATH+"/windows-logo.svg")
                 print("attached")
             else:
-                self.indicator.set_icon(CURRPATH+"/attached.svg")
+                self.indicator.set_icon(CURRPATH+"/ubuntu-logo.svg")
                 print("not attached")
             time.sleep(1)
             t += 1
 
     def focusritewin10(self, source):
         os.system(CURRPATH+"/focusrite-win10.sh")
-        self.indicator.set_icon(CURRPATH+"/detached.svg")
+        self.indicator.set_icon(CURRPATH+"/windows-logo.svg")
 
     def focusriteubuntu(self, source):
         os.system(CURRPATH+"/focusrite-ubuntu.sh")
-        self.indicator.set_icon(CURRPATH+"/attached.svg")
+        self.indicator.set_icon(CURRPATH+"/ubuntu-logo.svg")
 
     def speedlinkmedusawin10(self, source):
         os.system(CURRPATH+"/speedlink-medusa-win10.sh")
