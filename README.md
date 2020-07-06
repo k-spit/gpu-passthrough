@@ -841,3 +841,5 @@ https://passthroughpo.st/using-evdev-passthrough-seamless-vm-input/
 https://bbs.archlinux.org/viewtopic.php?id=69454
 
 https://python-evdev.readthedocs.io/en/latest/tutorial.html
+
+https://github.com/jedisct1/piknik
