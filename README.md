@@ -215,20 +215,19 @@ That allowed my monitor to work on the next boot of the virtual machine.
 Now find the line which ends with `</vcpu>` and add the following block in the next line:
 
 ```xml
-<vcpu placement='static'>8</vcpu>
-<iothreads>1</iothreads>
-<cputune>
-  <vcpupin vcpu='0' cpuset='2'/>
-  <vcpupin vcpu='1' cpuset='8'/>
-  <vcpupin vcpu='2' cpuset='3'/>
-  <vcpupin vcpu='3' cpuset='9'/>
-  <vcpupin vcpu='4' cpuset='4'/>
-  <vcpupin vcpu='5' cpuset='10'/>
-  <vcpupin vcpu='6' cpuset='5'/>
-  <vcpupin vcpu='7' cpuset='11'/>
-  <emulatorpin cpuset='0,6'/>
-  <iothreadpin iothread='1' cpuset='0,6'/>
-</cputune>
+<vcpu placement='static'>6</vcpu>
+  <iothreads>2</iothreads>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='6'/>
+    <vcpupin vcpu='1' cpuset='7'/>
+    <vcpupin vcpu='2' cpuset='8'/>
+    <vcpupin vcpu='3' cpuset='9'/>
+    <vcpupin vcpu='4' cpuset='10'/>
+    <vcpupin vcpu='5' cpuset='11'/>
+    <emulatorpin cpuset='0-1'/>
+    <iothreadpin iothread='1' cpuset='0-1'/>
+    <iothreadpin iothread='2' cpuset='2-3'/>
+  </cputune>
 ```
 
 Attention:Make sure `<vcpu>`, `<iothreads>` and `<cputune>` have the same indent.
