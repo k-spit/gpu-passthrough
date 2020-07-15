@@ -30,7 +30,7 @@ Define thread-update function, check virsh domain status and if necessary change
 def update(self):
   t = 2
   while True:
-      x = os.system(CURRPATH+"/checkStatus.sh")
+      x = os.system(CURRPATH+"/focusrite-status.sh")
       if x == 256:
           print("attached")
           self.indicator.set_icon(CURRPATH+"/attached.svg")
@@ -55,7 +55,7 @@ virsh attach-device $domain --file $devicedesc
 virsh detach-device $domain --file $devicedesc
 ```
 
-For updating the status (icon) `update` function is call every second by thread. To get the current status (is the device attached, or not ?), `checkStatus.sh` is called by `os.system`.
+For updating the status (icon) `update` function is call every second by thread. To get the current status (is the device attached, or not ?), `focusrite-status.sh` is called by `os.system`.
 
 ```shell
 status=$(virsh domstate $domain)
@@ -73,5 +73,5 @@ else
 fi
 ```
 
-If the domain is not running `checkStatus.sh` exits with `exit 2` (x == 512 in `attach-detach-tray.py`). 
-If the device is already attached, `checkStatus.sh` exits with `exit 1` (x == 256 in `attach-detach-tray.py`). 
+If the domain is not running `focusrite-status.sh` exits with `exit 2` (x == 512 in `attach-detach-tray.py`). 
+If the device is already attached, `focusrite-status.sh` exits with `exit 1` (x == 256 in `attach-detach-tray.py`). 

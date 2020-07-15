@@ -2,4 +2,4 @@
 
 domain="win10"
 
-virsh destroy $domain
+virsh start $domain
