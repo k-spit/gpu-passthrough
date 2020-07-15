@@ -1,4 +1,4 @@
-<domain type='kvm' id='8' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+<domain type='kvm' id='1' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>win10</name>
   <uuid>c626c5d3-1b42-4fed-8f6d-337a62351252</uuid>
   <memory unit='KiB'>16777216</memory>
@@ -167,27 +167,18 @@
     <hostdev mode='subsystem' type='pci' managed='yes'>
       <driver name='vfio'/>
       <source>
-        <address domain='0x0000' bus='0x09' slot='0x00' function='0x0'/>
+        <address domain='0x0000' bus='0x09' slot='0x00' function='0x1'/>
       </source>
       <alias name='hostdev0'/>
-      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
+      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
     </hostdev>
     <hostdev mode='subsystem' type='pci' managed='yes'>
       <driver name='vfio'/>
       <source>
-        <address domain='0x0000' bus='0x09' slot='0x00' function='0x1'/>
+        <address domain='0x0000' bus='0x09' slot='0x00' function='0x0'/>
       </source>
       <alias name='hostdev1'/>
-      <address type='pci' domain='0x0000' bus='0x05' slot='0x00' function='0x0'/>
-    </hostdev>
-    <hostdev mode='subsystem' type='usb' managed='yes'>
-      <source>
-        <vendor id='0x1235'/>
-        <product id='0x8211'/>
-        <address bus='3' device='2'/>
-      </source>
-      <alias name='hostdev2'/>
-      <address type='usb' bus='0' port='1'/>
+      <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
     </hostdev>
     <redirdev bus='usb' type='spicevmc'>
       <alias name='redir0'/>
@@ -212,7 +203,7 @@
   </seclabel>
   <qemu:commandline>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse'/>
+    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-MOSART_Semi._2.4G_Keyboard_Mouse-if01-event-mouse'/>
     <qemu:arg value='-object'/>
     <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd,grab_all=on,repeat=on'/>
   </qemu:commandline>
