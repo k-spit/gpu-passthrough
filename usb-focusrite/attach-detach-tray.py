@@ -22,11 +22,11 @@ item_medusa_toggle = gtk.MenuItem('Toggle Medusa')
 item_focusrite_toggle = gtk.MenuItem('Toggle Focusrite')
 
 def check_domain_status():
-    ds = os.system(CURRPATH+"/domain-status.sh")
-    if ds == 256:
-        item_domain_toggle.set_label("Toggle domain (win10) - shut off")
-    else:
-        item_domain_toggle.set_label("Toggle domain (win10) - running")
+        ds = os.system(CURRPATH+"/domain-status.sh")
+        if ds == 256:
+            item_domain_toggle.set_label("Toggle domain (win10) - shut off")
+        else:
+            item_domain_toggle.set_label("Toggle domain (win10) - running")
 
 def check_focusrite_status(self):
     x = os.system(CURRPATH+"/focusrite-status.sh")
@@ -45,7 +45,6 @@ def check_medusa_status():
         item_medusa_toggle.set_label("Toggle Medusa - attached")
     else:
         item_medusa_toggle.set_label("Toggle Medusa - detached")
-
 
 class Indicator():
     def __init__(self):
@@ -91,11 +90,14 @@ class Indicator():
 
             time.sleep(1)
             t += 1
+            
+    
 
     def startwin10(self, source):    
         x=os.system(CURRPATH+"/start-win10.sh")
         if x == 256:
-            os.system(CURRPATH+"/forcestop-win10.sh")     
+            os.system(CURRPATH+"/forcestop-win10.sh")   
+        os.system(CURRPATH+"/trigger.sh")   
     
     def focusritewin10(self, source):
         if self.indicator.get_icon() == "/home/desktop/git/gpu-passthrough/usb-focusrite/windows-logo.svg":
