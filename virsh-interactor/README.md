@@ -46,7 +46,7 @@ Define functions for attaching/detaching the interface.  Each of these function 
 ```shell
 vendorid="0x1235" # device vendorid
 domain="win10" # virsh domain
-devicedesc=/home/desktop/gpu-passthrough/usb-focusrite/usb-focusrite.xml
+devicedesc=usb-focusrite.xml
 
 # to attach a device to a domain
 virsh attach-device $domain --file $devicedesc

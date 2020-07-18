@@ -97,10 +97,10 @@ class Indicator():
         x=os.system(CURRPATH+"/start-win10.sh")
         if x == 256:
             os.system(CURRPATH+"/forcestop-win10.sh")   
-        os.system(CURRPATH+"/trigger.sh")   
+        os.system(CURRPATH+"/focus.sh")   
     
     def focusritewin10(self, source):
-        if self.indicator.get_icon() == "/home/desktop/git/gpu-passthrough/usb-focusrite/windows-logo.svg":
+        if self.indicator.get_icon() == CURRPATH+"/windows-logo.svg":
             focusrite_activated = True
         else:
             focusrite_activated = False
