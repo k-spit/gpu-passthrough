@@ -484,7 +484,34 @@ I had to use the following block in my win10 xml to get things working:
 ```
 
 ## Troubleshooting
-### Permission Errors
+### VM does not start with pci device
+
+Starting with kernel version 5.4, the “vfio-pci” driver is no longer a kernel module, but build-in into the kernel.
+On boot the vfio driver is not loaded instead the native nvidia drivers are loaded. 
+
+Workaround:
+
+Add a hook script to load vfio driver instead of native nvidia driver.  
+
+Copy hook script to /etc/initramfs-tools/scripts/init-top:  
+`sudo cp etc/initramfs-tools/scripts/init-top/bind_vfio.sh /etc/initramfs-tools/scripts/init-top/bind_vfio.sh`
+
+Change permissions and owner:  
+`sudo chmod 755 /etc/initramfs-tools/scripts/init-top/bind_vfio.sh`  
+`sudo chown root:root /etc/initramfs-tools/scripts/init-top/bind_vfio.sh`  
+
+Update initramfs:  
+`sudo update-initramfs -u`  
+
+Verify if the initial ramdisk does indeed have the script ready by running:  
+`sudo lsinitramfs /boot/initrd.img-5.4.0-42-generic | grep vfio`  
+
+Reboot your system. When it comes online, run this:  
+`lspci -nnv`
+
+Find your VGA compatible controller and check if kernel driver "vfio-pci" is in use.
+
+### Evdev Permission Errors
 
 There are a wide variety of causes for permission issues with evdev passthrough. To start, let’s set up cgroup_device_acl in libvirt’s configuration. Ensure the following is in `/etc/libvirt/qemu.conf`, of course replacing `KEYBOARD_NAME` and `MOUSE_NAME`:
 
