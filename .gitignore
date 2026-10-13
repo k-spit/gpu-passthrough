@@ -1,0 +1,21 @@
+# Documentation only: never commit unreviewed machine data.
+*.qcow2
+*.img
+*.iso
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.reg
+*.log
+*.tar
+*.tar.gz
+.env
+.env.*
+__pycache__/
+*.pyc
+private/
+secrets/
+local-evidence/
