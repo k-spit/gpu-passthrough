@@ -4,6 +4,8 @@
 
 **Current acceptance (2026-10-13 afternoon):** An actual guarded NumPad2 startup and bidirectional NumPad1/NumPad2 focus sequence worked after a reboot-related repair; the guest then shut down normally and root restoration completed successfully. If a launcher only reports that startup was **requested**, this is not proof Windows is running; the independent systemd controller reports failures separately. Starting this VM directly in a virtualization GUI bypasses the supervised root transaction and will **not** authorize safe live USB/input hotkeys. See [incident analysis](08-incidents.md) and [new acceptance](09-acceptance-evidence.md).
 
+**Newer host reboot observation (~14:39 CEST):** the newly started Chromium/Chat On Steroids processes reopened Radeon render nodes despite their installed NVIDIA-only launcher preferences. If `--check` reports existing Radeon clients, **do not force the detach or manually boot the VM**. The earlier validated cycle remains valid, but another reboot-persistent device-ownership solution has not yet been implemented.
+
 | Key | Intended result |
 | --- | --- |
 | `Ctrl+Alt+NumPad1` | Ubuntu HDMI2 + Logitech keyboard/mouse. Windows keeps running. |
