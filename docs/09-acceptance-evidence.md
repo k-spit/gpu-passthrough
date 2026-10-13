@@ -25,8 +25,20 @@ The Ubuntu host independently logged an exact Windows COM1 NumPad1 request **03:
 
 By the final Windows repair, 29 offline host focus/audio tests plus 9 additional Windows-script contract tests were passing (**38 total**). Those are source validations and do not replace human-verified Windows video/input/audio. Separate live Scarlett USB attach/detach passed with guest running and no display/keyboard change. Scarlett audible crackling was corrected by the user's Windows vendor driver installation; complete audible sound testing was **not** repeated after the final reboot. The 12-second delayed Dell HDMI retry was separately tested synthetically, not exercised in a third full Windows run immediately after installation.
 
+## New 2026-10-13 no-SSH retirement evidence (~04:00-04:06 CEST)
+
+The owner gracefully shut down Windows. Both domains became `shut off`, Radeon GPU/audio returned to `amdgpu`/`snd_hda_intel`, NVIDIA/GNOME PID persisted, USB input and Scarlett stayed on Ubuntu, Dell VCP `0x60=0x12`, root recovery timer and transaction markers were retired. The Windows qcow2 overlay had grown to approximately **58 GiB**; its data were preserved, not reset or exported to GitHub.
+
+The old daily controller reported an intermediate `in shutdown` as failure; the independent root watchdog correctly completed recovery by 03:59:46. The code now waits through this transitional state; no real guest reboot/shutdown was repeated after that fix.
+
+The new local root recovery helper passed idle readiness, strict unit/source/service/timer integrity checks and an actual safe timer arm/disarm smoke while both VM domains were off. An active timer **without** a marker was correctly rejected by the idle gate. There were **50 passing offline tests**: original 38 plus 12 targeted local recovery/watchdog/shutdown tests. The full strict preflight and normal launcher `--check` both returned PASS with inbound SSH disabled and again after the SSH server package purge, including the last-moment zero-Radeon-client scan. No guest boot was performed during SSH retirement; this is **preflight validation**, not a new full hardware round trip.
+
+OpenSSH server and SFTP server packages were purged, TCP port 22 closed, no `sshd` process, and outgoing `openssh-client` remained. The dedicated prior Fedora SSHD drop-in was backed up and removed. Local scripts, raw logs and private `/etc/ssh` backups were retained on the workstation, not posted publicly.
+
 ## State after last accepted focus test
 
 The original Windows VM was still running in the background, Dell HDMI2 showed Ubuntu, Logitech receivers and Scarlett were on Ubuntu, independent GPU recovery watcher/timer remained active (expected while VM owns Radeon), and unrelated Ubuntu graphical applications were alive. That is **not** the same as a fully idle host; AMD PCI was still assigned to VFIO.
 
 Tests never authorized converting the Windows native SSD to direct-write, resetting/committing qcow2, enabling virtual NIC networking, patching Mutter, installing a generalized automatic redeployer, or restarting GDM during daily switching.
+
+The post-retirement tools-CD update was performed while both guests were **off**, replacing only one read-only helper ISO PowerShell file's obsolete SSH guidance; all other 18 files remained identical and the canonical optical-media XML path was unchanged. No Windows profile data or native backing SSD contents were touched. This was a static media integrity check, not an extra guest acceptance.

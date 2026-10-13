@@ -1,40 +1,67 @@
-# Fedora-to-Ubuntu SSH recovery: original role and retirement
+# Retiring the Fedora-to-Ubuntu SSH recovery server
 
-**This page is a record of the actual status and the safety blocker, not an instruction to disable live recovery carelessly.** The user requested removing the Ubuntu SSH *server* installed for the Fedora laptop. The client-side SSH program is useful for Git/GitHub and must remain installed.
+**Final status: completed on 2026-10-13 (~04:06 CEST).** The owner explicitly authorized using the **existing local independent root GPU recovery watchdog** in place of the external Fedora SSH requirement, and indicated they would reinstall SSH if later needed. Both libvirt Windows guests were confirmed off *before* any inbound SSH service was disabled. No host or Windows reboot was performed.
 
-## Why the server was installed
+## Why SSH originally existed
 
-During early Radeon passthrough tests, Ubuntu GNOME or its display output could disappear. The Fedora laptop authenticated over SSH to the Ubuntu desktop to verify PCI drivers, libvirt, GDM, exact ACLs and independent root recovery without requiring a functional display. This path was a safety prerequisite for the one-time GNOME relogin and first VFIO detach.
+Earlier passthrough experiments could temporarily leave the GNOME graphical display unusable. A Fedora laptop authenticated over a separately available SSH session to the Ubuntu desktop to inspect Radeon/NVIDIA drivers, recover safely from PCI handoff problems, and supervise the one-time Wayland/GDM transition. Old `option-a-preflight.py` and `radeon-release-readiness.py` **required** both an active `ssh.socket` and a live Fedora connection before GPU detach.
 
-The host originally had OpenSSH `sshd` started through socket-activated systemd (`ssh.socket`, listening on TCP 22). Ubuntu's `openssh-client` is a separate **outgoing** program; removing `openssh-server` does not require removing the client.
+OpenSSH was socket-activated on the Ubuntu desktop with inbound port 22. The outgoing `openssh-client` is a **different package**, needed for Git and future manual SSH commands; it was intentionally retained.
 
-## Actual inspection before removal (2026-10-13 ~03:44 CEST)
+## Evidence that it was safe to retire the external login
 
-- `openssh-server` and `openssh-sftp-server` installed (Ubuntu 24.04); `openssh-client` also installed.
-- `ssh.socket` **enabled and active**, `ssh.service` **active**, IPv4/IPv6 TCP port 22 listening.
-- **No active Fedora SSH client session** at the point of inspection. Local GNOME session remained Wayland seat0.
-- `ufw` reported **inactive**; no active UFW SSH rule removal was needed.
-- The **exact Windows VFIO guest was still running** in the background. Radeon PCI GPU/audio remained `vfio-pci`; Logitech receivers and Scarlett were on Ubuntu, Dell HDMI2.
+1. The user chose **Windows > Power > Shut down** normally, without a forced timeout. Both `win11-physical` and `win11-physical-vfio-check` reached `shut off`.
+2. Radeon `0000:0b:00.0` was restored to `amdgpu` and audio `0000:0b:00.1` to `snd_hda_intel`, while NVIDIA `0000:0c:00.0` remained the GNOME `nvidia` device.
+3. Dell U4919DW reported HDMI2 (`0x12`), both Logitech receivers were on Ubuntu, Scarlett Solo was Ubuntu-owned and the original GNOME/Chromium/Chat On Steroids processes survived.
+4. The independent recovery timer was inactive, its state marker was absent, ACL backup markers were cleared, and the Windows backing SSD remained unmounted. The qcow2 overlay and original physical SSD were not reset, written, or converted.
+5. There were no current inbound Fedora SSH connections; source `/etc/ssh/` and the effective systemd SSH definitions were backed up locally under a root-only restricted backup directory, **not published to GitHub**.
 
-## Critical dependency discovered
+## Replace the SSH precondition with verified local recovery, not with no recovery
 
-`option-a-preflight.py` currently requires BOTH an active `ssh.socket` and an authenticated live Fedora SSH login before approving a new Radeon handoff. `radeon-release-readiness.py` also includes this gate. Removing the OpenSSH server therefore intentionally causes the next Windows *start from an idle host* to **fail closed** until the recovery prerequisite is separately redesigned. This is not a reason to quietly bypass the gate or claim a new Windows session would work without independent recovery.
+Added `local_recovery_readiness.py` to the existing, local dual-GPU project and called its `ensure_local_recovery_ready()` from **both** the initial `option-a-preflight.py` and the last-moment all-process `radeon-release-readiness.py`. It is **read-only** and **fail closed**. It verifies:
 
-The already-running guest can still use COM1 NumPad1/Ubuntu NumPad2 hotkeys and independent root recovery watchdog while the host remains healthy. But deleting the external SSH path during active VFIO removes the fallback used in original safety tests. It should be retired only when the Windows guest has been gracefully shut down, Radeon drivers/ACLs are back on Ubuntu and the root recovery timer is inactive.
+- The actual root-installed `/usr/local/sbin/dual-gpu-option-a-recover` is a non-symlink regular executable, owned by root and not group/world writable, byte-identical to its reviewed source.
+- The installed root recovery systemd `.service` and `.timer` are similarly root-owned, non-writable and byte-identical to the reviewed local source files.
+- The service is loaded from the exact root unit path, has type `oneshot`, effective root user/group, exact recovery-helper `ExecStart`, is not currently running and has not failed.
+- The timer is loaded from the expected root unit file, triggers **only** the recovery service, has the documented `OnActiveSec=120s` and `OnUnitActiveSec=60s` schedule, and reports healthy systemd state.
+- **Idle:** no GPU handoff marker exists and the timer must be inactive. **In a handoff:** the marker is present and the timer must be active. Mismatches prevent a new GPU release.
 
-## Safe retirement conditions
+The existing controller continues to arm the timer *before* protecting Radeon render-node ACLs and detaching either AMD PCI function. The independent root recovery helper continues to refuse GPU rebind if either Windows VM has not shut off. All other hardware, VM XML, GPU FD, Dell and storage checks are preserved. No SSH fallback was silently swapped for an unconditional success.
 
-1. User shuts down Windows **normally**, without an imposed deadline. Both libvirt Windows domains report shut off.
-2. Radeon `.0` binds to `amdgpu` and `.1` to `snd_hda_intel`; NVIDIA keeps GNOME HDMI2. Exact root transaction markers are cleared and independent GPU recovery timer is inactive.
-3. Backup the existing `/etc/ssh/` and the service's effective state into a local, access-restricted (not GitHub) file. Check `apt-get -s purge openssh-server openssh-sftp-server` for unrelated packages before doing any removal; **keep openssh-client**.
-4. Stop/disable the **server** and socket activation; purge only the server packages if the dependency simulation is clean. Do not run broad `apt autoremove` or delete unrelated keys/accounts.
-5. Verify no process listens on TCP 22, both OpenSSH server packages are absent, Ubuntu SSH *client* remains, and GNOME/other desktop applications are still running.
-6. Record actual results (or an explicit blocker) here. Do not pretend the pre-existing strict VM-start preflight will still pass after SSH retirement; decide separately whether to provide another independent recovery channel before future GPU handoffs.
+## A separate false failure found during the final graceful Windows shutdown
 
-**No recurring cleanup automation, firewall broadening, or silent guest shutdown is authorized.** The absence of inbound SSH changes the security/recovery tradeoff; it does not improve the correctness of GPU transitions.
+At ~03:58:59, while Windows was powering down normally, libvirt briefly returned **`in shutdown`**. The old daily controller treated any state other than `running`/`shut off` as fatal, so its systemd unit reported exit 1, although the independent root timer subsequently restored Radeon/ACLs, Dell HDMI2 and GNU/Linux input safely by ~03:59:46.
 
-## Removal readiness check at ~03:55 CEST (no service was changed)
+The daily and bounded wait loops were corrected to **wait** through `in shutdown` (without classifying it as `shut off`, and without adding a guest auto-shutdown deadline). Unexpected other states still fail closed. The finish path now reports recovery success only if the root marker was retired, both AMD PCI drivers are back, and the watchdog timer is inactive; it no longer incorrectly calls a deferred guest-state recovery a PASS. Error messages referring to the retired Fedora path were updated to use local console/physical Dell fallback. After confirming the idle system was safe, the previous systemd failure flag was cleared; the original log was preserved. This change passed offline state-transition tests, **not** a second live Windows shutdown after the edit.
 
-A read-only `apt-get -s purge openssh-server openssh-sftp-server` simulation showed **only those two packages** would be purged. `openssh-client` would remain installed and functional for outbound SSH/Git. The simulation also printed unrelated old autoremove candidates, but **none** should be autore-moved as part of this task. `ss` still showed `sshd`/systemd on port 22, and no active Fedora SSH clients.
+## Recovery verification without SSH
 
-**Actual removal status: BLOCKED / NOT EXECUTED.** The exact Windows VM was still running under Radeon VFIO and the independent root GPU recovery timer was armed. Removing the external recovery server now would discard the historical rescue path in mid-handoff. The existing strict preflight also explicitly requires a live Fedora SSH session for *future* Windows starts, so removing the server without a separately approved replacement makes the daily launch fail closed. Do not silently modify that authorization/safety gate. Shutdown of the guest must remain user-controlled.
+- The root timer was **actually started and observed active** while both Windows domains and all GPU handoff markers were absent. The local idle readiness check intentionally rejected that unexpected active-timer state. The timer was stopped, and idle readiness passed again. This established that the independent root timer could be armed and retired without touching the GPU.
+- **50 offline tests passed:** 38 prior focus/audio/Windows listener contracts and 12 new local-recovery, fail-closed and shutdown-state tests.
+- Both the **full strict preflight** (`option-a-preflight.py --strict`) and the ordinary user's **read-only launcher check** (`switch-to-windows --check`) passed with `ssh.socket` stopped and no Fedora session. They both passed again **after package purging**.
+- The guest was **not** started again to test a complete fresh post-SSH VFIO cycle. Previous live round trips and watcher recoveries remain the hardware evidence; this retirement adds strict no-SSH readiness proof, not a new Windows boot claim.
+
+## Exact server retirement
+
+Prior to removal, `apt-get -s purge openssh-server openssh-sftp-server` was checked to remove **only** those two server packages. No unrelated `apt autoremove` was executed.
+
+1. Stopped and disabled `ssh.socket` and `ssh.service` with systemd while both Windows domains were off.
+2. Rechecked full strict GPU preflight and desktop launch preflight with port 22 closed; both passed.
+3. Purged **only** `openssh-server` and `openssh-sftp-server`; left `openssh-client` installed.
+4. Verified `ssh.socket`/`ssh.service` were `not-found` and inactive, there was no `sshd` process, and TCP port 22 had **no listening socket**.
+5. Found one non-package-owned server-only drop-in, `/etc/ssh/sshd_config.d/01-single-gpu-recovery.conf`, from the old Fedora access. Preserved a private root-only copy and removed that drop-in and its now-empty directory. No user SSH client configuration was removed.
+6. Checked the same GNOME, Chromium, Chat On Steroids, NVIDIA display, Linux AMD drivers, Logitech input, Scarlett default playback and stopped Windows domains; all remained intact.
+
+Private originals and the pre-change root helper/source scripts were retained under `/var/backups/dual-gpu-ssh-retirement-20261013/` (root-only permissions), **not** in this public repository. The earlier user-private compressed original dual-GPU source backup also remains outside Git.
+
+## Security/recovery tradeoff and manual reinstall
+
+With inbound SSH removed, there is **no Fedora remote recovery connection**. The verified local watchdog can restore AMD and ACLs after shutdown while independent systemd/root remains alive, but it **cannot guarantee remote access** if the entire host crashes or its graphical input becomes unusable. This reduced external recovery capability was explicitly accepted. The Dell physical input selector and local console remain the manual display options; choosing HDMI2 alone does not transfer Logitech USB ownership.
+
+If inbound SSH is later needed, the user can manually reinstall OpenSSH server through Ubuntu's package manager (e.g. `sudo apt install openssh-server`) and review whether `ssh.socket` should be enabled. The prior private configuration backup exists for *inspection*, not blind unattended restoration. No recurrent server-install or deployment automation has been introduced.
+
+## Offline Windows helper ISO label cleanup
+
+While **both Windows guests remained shut off**, the existing read-only `UBUNTU_RETURN` tools ISO was preserved, unpacked, and rebuilt with **only** the manual fallback PowerShell script's now-obsolete Fedora SSH help text changed to reference the physical Dell input menu and **local Ubuntu console**. Its other 18 files were byte-for-byte unchanged. The guest XML still points to the exact canonical ISO path and the image remains read-only, `libvirt-qemu:kvm` owned. The original ISO checksum was `1bc3095810f72bea99c5bdf1265c65793bb14056f820842cb13f61c0ebafa8f9`; its preserved backup remains local. The new canonical ISO checksum was `7cc519aaa408993cea3397ecc7706b75b51036fb7e127ad8c5ec2f930cb45e63`.
+
+This was **not** a Windows guest session, Windows-profile installer run, or VM disk edit. The copy of the fallback script already installed in the Windows user's profile may still display the historical Fedora SSH wording until a later **manual** reinstall; its COM1 operation is unchanged. No new guest boot is necessary for this cosmetic message update.

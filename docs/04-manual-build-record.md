@@ -50,4 +50,10 @@ After a Windows reboot, the Windows hotkey listener did not resume reliably. Inv
 
 Source/installed equality, syntax and 38 offline regression checks were recorded. Hardware display+USB and Scarlett audio handoffs had independent real tests. The Windows-only reboot proof covered both listeners' startup and live NumPad1 return. It did **not** repeat the full Scarlett audible playback sequence after that last reboot.
 
+## 9. Retire external Fedora SSH with user-approved local recovery gate
+
+After the user normally shut Windows down and exact AMD driver/ACL/HDMI2 recovery was independently verified, they authorized replacing Fedora SSH with the existing root recovery watchdog. Added a shared, **read-only, fail-closed** `local_recovery_readiness.py` gate to both the initial VM-start preflight and the last-moment Radeon release scanner. It validates the root-installed recovery helper and source identity, exact systemd service/timer integrity and health, timer schedule and correct armed-versus-idle behavior. Tested real timer start/stop while both guests were off, 12 additional negative/positive offline tests and 38 earlier tests (**50 total**), strict+launcher preflight with SSH socket stopped, and repeat strict+launcher preflight after package purge. Purged only the inbound SSH server and server SFTP packages, kept the outgoing client, removed the obsolete scoped SSHD Fedora drop-in, and saved root-only private backup. No Windows VM run or GDM reboot was used for this change.
+
+The normal guest shutdown also revealed a libvirt `in shutdown` transient that the old daily controller falsely reported as fatal. The original root timer still recovered safely; the updated controller now waits for real shutdown while retaining the watchdog, without a guest deadline or false PASS. This change was source-tested; no second hardware shutdown test was run afterward.
+
 See [architecture](01-architecture.md), [incidents](08-incidents.md), [acceptance](09-acceptance-evidence.md) and [SSH retirement](10-ssh-retirement.md). Future automation is intentionally deferred.

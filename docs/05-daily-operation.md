@@ -37,7 +37,7 @@ sudo /usr/local/sbin/dual-gpu-option-a-ddc probe
 systemctl show dual-gpu-option-a-recover.timer -p ActiveState -p SubState
 ```
 
-Read-only `~/.local/bin/switch-to-windows --check` is a stricter **idle preflight**, not a valid check while the VM is already running. It historically also requires a live authenticated Fedora SSH session; after that server is removed, new starts intentionally fail closed until the recovery policy is consciously reconciled. That is a safety issue, not an invitation to bypass the gate.
+Read-only `~/.local/bin/switch-to-windows --check` is a stricter **idle preflight**, not a valid check while the VM is already running. The former Fedora SSH requirement was explicitly replaced with a **fail-closed local root recovery watchdog check** after the user approved removing the inbound SSH server. Its actual systemd service/timer, installed source identity and armed/idle state are verified by both initial and last-moment Radeon-readiness gates. This passed after SSH removal; a fresh complete Windows VM run after the change was not performed.
 
 ### Windows-side checks
 

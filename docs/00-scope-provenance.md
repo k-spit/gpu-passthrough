@@ -24,3 +24,7 @@ The original GitHub `master` commit and complete history are preserved on `archi
 ## Local private evidence copy
 
 A separate **local-only**, owner-readable (`0600`) compressed archive of the original dual-GPU source and logs was saved outside the Git repository on the workstation. It is not uploaded or linked as a public download. The archived raw files and on-disk source are to be handled as private evidence.
+
+## Verified post-SSH-retirement snapshot
+
+After the owner's Windows shutdown and explicit local-watchdog recovery decision, a second public **filename/size/SHA-256** snapshot was recorded at `reference/source-inventory-after-ssh-retirement.md`. It distinguishes the original 03:55 documentation inventory from the modified local scripts, tests and evidence after inbound OpenSSH removal. It contains no raw Windows storage, private SSH host keys or credentials. The original owner-private source backup and separate root-only SSH configuration backup remain outside GitHub. Post-retirement source/ISO checksums appear in documentation only; private Windows profile and storage data were never exported.

@@ -32,4 +32,4 @@ Windows changes are written only to `/var/lib/libvirt/images/win11-physical-safe
 
 A guarded root GPU recovery timer is armed during guest ownership; it must not rebind Radeon while Windows remains running. A root focus watcher handles COM1/USB/DDC. Other scripts validate state under locks and compare original GNOME process identity. Production installation leaves NVIDIA, GNOME, Chrome and Chat On Steroids running throughout normal focus changes.
 
-This setup initially relied on an independently authenticated Fedora SSH recovery login. Removing it requires separately reconciling the strict launch gates, as explained in [SSH retirement](10-ssh-retirement.md).
+This setup originally relied on independently authenticated Fedora SSH. The user later authorized retiring that server after Windows was off and replacing its preflight condition with a strictly checked **local root recovery service/timer** (not an external equivalent). Strict no-SSH readiness passed. See [SSH retirement](10-ssh-retirement.md).

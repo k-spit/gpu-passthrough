@@ -33,10 +33,11 @@ With NumLock enabled:
 - [Failures and lessons](docs/08-incidents.md)
 - [Verified acceptance and local evidence](docs/09-acceptance-evidence.md)
 - [Recovery SSH decommissioning](docs/10-ssh-retirement.md)
-- [Local source and configuration map](reference/source-inventory.md)
+- [Local source and configuration map (original snapshot)](reference/source-inventory.md)
+- [Local source checksums after SSH retirement](reference/source-inventory-after-ssh-retirement.md)
 
 ## Critical limitations
 
 Never boot native Windows and modify the backing SSD while keeping the existing qcow2 overlay: a changed backing device makes the VM overlay unsafe. Windows VM changes do **not** write back to physical Windows. Never reset the overlay casually, force-rebind Radeon while a guest owns it, detach a device while Linux clients hold DRM nodes, or run the old single-GPU probe (it stops GDM).
 
-**Public repo:** machine-unique SSD, monitor, USB serials, VM UUIDs, Fedora LAN addresses, secrets and raw logs are deliberately omitted. Original scripts, configs and evidence stay on the desktop. The original safety preflight depended on Fedora SSH; check [SSH retirement](docs/10-ssh-retirement.md) before assuming new Windows starts are still permitted after server removal.
+**Public repo:** machine-unique SSD, monitor, USB serials, VM UUIDs, Fedora LAN addresses, secrets and raw logs are deliberately omitted. Original scripts, configs and evidence stay on the desktop. The Fedora recovery SSH server was **removed** after the user-approved migration to a fail-closed **local root recovery-watchdog preflight**. Full strict readiness and the normal launch precheck passed after removal; another real Windows GPU handoff was **not** started as part of the SSH cleanup. See [SSH retirement](docs/10-ssh-retirement.md).

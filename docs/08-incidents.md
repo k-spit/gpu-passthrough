@@ -48,6 +48,10 @@ Both old Windows installers called `New-Item -Path $runKey -Force` on an existin
 
 When QEMU removed COM1 after graceful guest poweroff, termios cleanup raised EIO and caused an unnecessary watcher restart. This is now treated as expected **only after verified guest shutoff**; the same error while guest remains running still fails closed. Main GPU/audio recovery had already succeeded despite the benign error.
 
-## 13. Unavailable Fedora recovery SSH
+## 13. Fedora SSH replaced after normal guest shutdown
 
-Fedora SSH was a prerequisite for dangerous early GPU cutover and remains referenced by strict runtime launch checks. A running VM does not become safe to detach simply because the user requested removal of the SSH server. Removing the server has to be documented and coordinated with normal guest shutdown and an explicit recovery-policy decision. See [SSH retirement](10-ssh-retirement.md).
+Fedora SSH was required for earlier dangerous GPU cutovers. The user later approved decommissioning that inbound server after both guests were off and Radeon was fully recovered. The strict initial preflight **and** last-moment Radeon release scanner now require an independently healthy root watchdog, exact helper/source identity and correct active-marker/timer state, instead of an authenticated Fedora session. Live SSH-independent readiness passed before and after purging the server packages. This removes external rescue ability, **not** the need for safe preflight. See [SSH retirement](10-ssh-retirement.md).
+
+## 14. Libvirt transient normal shutdown misreported as failed daily run
+
+While Windows was shutting down normally at 03:58:59, libvirt reported `in shutdown` rather than `running`/`shut off`. The old everyday root controller treated this as fatal and exited status 1; the independently armed root timer correctly waited for the real VM shutoff and then restored both Radeon PCI functions, ACLs and HDMI2. Its log is preserved. The revised wait loop tolerates that **transitional** state but still waits for *actual* `shut off`; it never forces guest shutdown. Recovery-completion log claims now also require marker retired, AMD Linux drivers restored and timer inactive. The fix passed offline transition tests but a second real Windows shutdown was not performed after the change.
