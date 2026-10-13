@@ -2,6 +2,8 @@
 
 **This is a record of the already-installed shortcuts, not an installation procedure.** The machine-specific binaries, protected guest and storage must already exist. NumLock must be **on** and keys refer to the physical **numeric keypad**, not the top row.
 
+**Current acceptance (2026-10-13 afternoon):** An actual guarded NumPad2 startup and bidirectional NumPad1/NumPad2 focus sequence worked after a reboot-related repair; the guest then shut down normally and root restoration completed successfully. If a launcher only reports that startup was **requested**, this is not proof Windows is running; the independent systemd controller reports failures separately. Starting this VM directly in a virtualization GUI bypasses the supervised root transaction and will **not** authorize safe live USB/input hotkeys. See [incident analysis](08-incidents.md) and [new acceptance](09-acceptance-evidence.md).
+
 | Key | Intended result |
 | --- | --- |
 | `Ctrl+Alt+NumPad1` | Ubuntu HDMI2 + Logitech keyboard/mouse. Windows keeps running. |
@@ -37,7 +39,7 @@ sudo /usr/local/sbin/dual-gpu-option-a-ddc probe
 systemctl show dual-gpu-option-a-recover.timer -p ActiveState -p SubState
 ```
 
-Read-only `~/.local/bin/switch-to-windows --check` is a stricter **idle preflight**, not a valid check while the VM is already running. The former Fedora SSH requirement was explicitly replaced with a **fail-closed local root recovery watchdog check** after the user approved removing the inbound SSH server. Its actual systemd service/timer, installed source identity and armed/idle state are verified by both initial and last-moment Radeon-readiness gates. This passed after SSH removal; a fresh complete Windows VM run after the change was not performed.
+Read-only `~/.local/bin/switch-to-windows --check` is a stricter **idle preflight**, not a valid check while the VM is already running. The former Fedora SSH requirement was explicitly replaced with a **fail-closed local root recovery watchdog check** after the user approved removing the inbound SSH server. Its actual systemd service/timer, installed source identity and armed/idle state are verified by both initial and last-moment Radeon-readiness gates. At SSH retirement no additional Windows session was started; **later on 2026-10-13 the guarded SSH-free VM round trip did pass**, including normal shutdown and recovery. If another action already holds the controller's lock, a simultaneous `--check` can fail without indicating bad hardware; use the exact service/VM state rather than forcing a duplicate check.
 
 ### Windows-side checks
 

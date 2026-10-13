@@ -12,6 +12,9 @@ The full unredacted logs are **local**, not copied into this public Git reposito
 | `live-focus-20261013-acceptance.md` | Initial live display/Logitech focus acceptance evidence. |
 | `option-a-audio-20261013-live.md` | Real Scarlett USB live-attach to the running VM and return to original Ubuntu PipeWire default sink; H570e unaffected; marker cleared. |
 | `windows-hotkey-postreboot-20261013.md` | COM1/DDM-dependency investigation, Windows listener and registry bug fix, separate post-reboot listener autostart and host-driven NumPad1 return. |
+| `post-reboot-cold-login-regression-20261013.md` | Two failed early post-reboot starts, corrective cold-login controller changes, guarded application relaunch and subsequent successful end-to-end Windows cycle. |
+| `radeon-acl-app-relaunch-20261013T142353.log`, `app-nvidia-restart-20261013T142353.log` | User-approved independent-root/user recovery guards, browser session preservation, no Radeon process handles after restart, successful strict GPU preflight. |
+| `option-a-20261013T142828-daily.log` | Later guarded Windows hotkey startup, exact read-only source/writable qcow2 FD proof, DP selection, user-controlled guest shutdown and independent root recovery. |
 | `MUTTER-HOT-REATTACH-INCIDENT.md` | Failing Radeon secondary GPU re-registration was **not** fixed; explains Option A choice. |
 | `nvidia-580/ROLLBACK.md`, `baseline.txt`, `install.log` | Historical proprietary NVIDIA installation and rollback/signed-driver verification. Logs remain private. |
 
@@ -35,7 +38,19 @@ The new local root recovery helper passed idle readiness, strict unit/source/ser
 
 OpenSSH server and SFTP server packages were purged, TCP port 22 closed, no `sshd` process, and outgoing `openssh-client` remained. The dedicated prior Fedora SSHD drop-in was backed up and removed. Local scripts, raw logs and private `/etc/ssh` backups were retained on the workstation, not posted publicly.
 
-## State after last accepted focus test
+## Latest post-reboot live acceptance (2026-10-13 around 14:28-14:34 CEST)
+
+After the guarded application relaunch, **65 offline tests passed** (previous 50, nine cold-login/startup safety tests and six app-relaunch/launcher contracts). The latest strict root readiness and normal desktop launcher checks passed with no AMD DRM clients. The running GNOME Wayland instance was preserved throughout.
+
+An actual **Ubuntu NumPad2** at approximately **14:28** started the existing Windows guest through the supervised daily controller. Both AMD PCI functions moved to VFIO; the live QEMU process was verified to open the original physical Windows SSD **read-only** and the preserved qcow2 overlay **read/write**. Dell DisplayPort was selected, the independent root recovery timer armed and the exact offline COM1 focus watcher started. Windows kept running without an automatic daily shutdown deadline.
+
+Windows **NumPad1** sent a valid guest/session-bound COM1 request at approximately **14:29:31**. By **14:29:39** the Ubuntu host had selected and verified Dell HDMI2 and returned both Logitech receivers while the *same Windows guest continued running*. Ubuntu **NumPad2** then positively verified the current protected guest, selected DP and returned both USB receivers to Windows without launching another guest. Additional NumPad1/NumPad2 transitions were observed. Occasional Dell DDC reads were temporarily uncertain; the watcher blocked those observations rather than treating them as USB-transfer consent, and subsequent explicitly authorized switches completed.
+
+The user shut Windows down normally at approximately **14:33:27**. The root recovery path restored AMD graphics/audio drivers, the original GPU and physical-source SSD access controls, the borrowed input state, and Dell HDMI2 with its delayed confirmation. The original GNOME and Chromium processes survived; transaction markers and recovery timer were retired. The main daily service completed **status 0 at 14:33:47** without stopping GDM. Both Windows domains were off, Logitech/Scarlett were Ubuntu-owned and the normal strict preflight passed again afterward. This establishes a successful **SSH-free startup, bidirectional focus and graceful shutdown/recovery round trip**, not merely synthetic tests.
+
+The Windows Scarlett audio **NumPad3** toggle was not independently exercised again during this particular cycle; earlier live audio round trips are the evidence for that feature. A **subsequent Ubuntu reboot** with the newly installed per-app NVIDIA launch preferences also remains untested. No guest image, disk backing, native Windows SSD, Secure Boot or host security changes were made as part of this acceptance.
+
+## Earlier state after the ~03:39 focus test
 
 The original Windows VM was still running in the background, Dell HDMI2 showed Ubuntu, Logitech receivers and Scarlett were on Ubuntu, independent GPU recovery watcher/timer remained active (expected while VM owns Radeon), and unrelated Ubuntu graphical applications were alive. That is **not** the same as a fully idle host; AMD PCI was still assigned to VFIO.
 

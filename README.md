@@ -20,6 +20,8 @@ With NumLock enabled:
 
 **Audio does not follow screen focus.** Ubuntu music or Discord may continue while Windows is shown. The separate H570e microphone remains with Ubuntu. The correct Focusrite Windows audio driver was needed to eliminate crackling.
 
+**Latest post-reboot acceptance (2026-10-13 afternoon):** after repairing a cold-login startup bug and performing a guarded NVIDIA-only Chat On Steroids/Chromium relaunch, the existing NumPad2 Windows startup, Windows NumPad1 return, and Ubuntu NumPad2 return to the *still-running* guest all passed on actual hardware. The user then shut Windows down normally; Radeon drivers, USB input, Dell HDMI2, original ACLs and the recovery-watchdog idle state returned successfully without restarting GNOME. The corrected system also passed **65 offline tests** and an independent strict idle preflight. NVIDIA-only preferences were added to the apps' user-level launchers; a *subsequent host reboot* has not yet tested those preferences. See [incidents](docs/08-incidents.md) and [acceptance evidence](docs/09-acceptance-evidence.md).
+
 ## How the two desktops work
 
 These diagrams explain the existing **Option A** installation, from the visible desktop switch down to the safety checks. They document the current machine; they are **not** installation or deployment instructions.
