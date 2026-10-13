@@ -6,6 +6,8 @@
 
 **Newer host reboot observation (~14:39 CEST):** the newly started Chromium/Chat On Steroids processes reopened Radeon render nodes despite their installed NVIDIA-only launcher preferences. If `--check` reports existing Radeon clients, **do not force the detach or manually boot the VM**. The earlier validated cycle remains valid, but another reboot-persistent device-ownership solution has not yet been implemented.
 
+**Libvirt name now:** **`Windows11`** is the **only remaining VM definition** on this workstation. The earlier SPICE/virtual-VGA test definition was removed without deleting shared storage. The working guest retained its existing durable UUID, firmware/TPM and original disk references. Although older local incident logs contain prior VM names, use the existing guarded NumPad2 launcher rather than manually booting the guest in virt-manager. The updated VM-name and hotkey checks passed offline; a real guest boot after this cosmetic rename has not yet been tested. See [incident 19](08-incidents.md).
+
 | Key | Intended result |
 | --- | --- |
 | `Ctrl+Alt+NumPad1` | Ubuntu HDMI2 + Logitech keyboard/mouse. Windows keeps running. |

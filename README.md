@@ -24,6 +24,8 @@ With NumLock enabled:
 
 **Later reboot limitation (~14:39 CEST):** a subsequent actual Ubuntu reboot **did test** those app launcher preferences, and they did **not** prevent newly started Chromium/Chat On Steroids from opening Radeon DRM render nodes. The strict GPU-release gate correctly blocks Windows startup until those handles are safely released. The successful earlier Windows round trip is valid evidence, but **fully reboot-persistent automatic startup remains unresolved**. No safety gate was weakened; see [incident 18](docs/08-incidents.md).
 
+**Libvirt VM inventory cleanup (later on 2026-10-13):** the now-unused virtual-VGA test VM definition was removed **without deleting its shared disk**, and the working passthrough guest was renamed to **`Windows11`**. The guest UUID, firmware/TPM state, read-only native Windows SSD backing, persistent qcow2 and helper ISO were preserved. The controller, NumPad hotkeys and exact-identity checks were updated, and **72 offline tests passed**. The next real boot *under the new display name* remains untested; the strict GPU-release check currently blocks on Radeon handles in open applications, independently of the VM rename. See [incident 19](docs/08-incidents.md) and [acceptance limits](docs/09-acceptance-evidence.md).
+
 ## How the two desktops work
 
 These diagrams explain the existing **Option A** installation, from the visible desktop switch down to the safety checks. They document the current machine; they are **not** installation or deployment instructions.
