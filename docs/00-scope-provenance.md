@@ -20,3 +20,7 @@ No claim is made of portability to other PCI groups/host drivers/monitors, autom
 This repository is **public**. Do not publish QEMU/Windows disk images, BitLocker material, physical NVMe EUI serial, Focusrite/monitor serial, exact guest UUID, SSH private/host keys, authentication tokens, host LAN IPs or unreviewed raw system logs. Local evidence is intentionally not copied into public Git. Its file inventory and optional checksums support traceability.
 
 The original GitHub `master` commit and complete history are preserved on `archive/legacy-gpu-passthrough-2020`. The existing `focus_feature` branch remains untouched. The new documentation branch is based on old `master` by an ordinary new commit, not by force-push.
+
+## Local private evidence copy
+
+A separate **local-only**, owner-readable (`0600`) compressed archive of the original dual-GPU source and logs was saved outside the Git repository on the workstation. It is not uploaded or linked as a public download. The archived raw files and on-disk source are to be handled as private evidence.

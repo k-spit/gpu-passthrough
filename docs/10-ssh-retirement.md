@@ -32,3 +32,9 @@ The already-running guest can still use COM1 NumPad1/Ubuntu NumPad2 hotkeys and 
 6. Record actual results (or an explicit blocker) here. Do not pretend the pre-existing strict VM-start preflight will still pass after SSH retirement; decide separately whether to provide another independent recovery channel before future GPU handoffs.
 
 **No recurring cleanup automation, firewall broadening, or silent guest shutdown is authorized.** The absence of inbound SSH changes the security/recovery tradeoff; it does not improve the correctness of GPU transitions.
+
+## Removal readiness check at ~03:55 CEST (no service was changed)
+
+A read-only `apt-get -s purge openssh-server openssh-sftp-server` simulation showed **only those two packages** would be purged. `openssh-client` would remain installed and functional for outbound SSH/Git. The simulation also printed unrelated old autoremove candidates, but **none** should be autore-moved as part of this task. `ss` still showed `sshd`/systemd on port 22, and no active Fedora SSH clients.
+
+**Actual removal status: BLOCKED / NOT EXECUTED.** The exact Windows VM was still running under Radeon VFIO and the independent root GPU recovery timer was armed. Removing the external recovery server now would discard the historical rescue path in mid-handoff. The existing strict preflight also explicitly requires a live Fedora SSH session for *future* Windows starts, so removing the server without a separately approved replacement makes the daily launch fail closed. Do not silently modify that authorization/safety gate. Shutdown of the guest must remain user-controlled.
